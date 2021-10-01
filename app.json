@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "CS153aFall21",
+    "slug": "CS153aFall21",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "CS153aFall21"
+}
