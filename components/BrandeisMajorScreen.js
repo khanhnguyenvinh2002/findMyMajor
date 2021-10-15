@@ -28,7 +28,6 @@ const Item = ({ title,navigation}) => {
             let count = data.length;
             data = count == 0 ? 0: data.map(x=> parseInt(x.rating, 10)).reduce((a, b) => a + b, 0)/count;
             setRating(data)
-            console.log('just set Info, Name and Email')
           } else {
             console.log('just read a null value from Storage')
           }

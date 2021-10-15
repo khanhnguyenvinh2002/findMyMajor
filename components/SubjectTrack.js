@@ -70,12 +70,15 @@ const SubjectTrack = ({ navigation, route }) => {
     try{
         let usersJSON= await AsyncStorage.getItem('@MajorRating');
         let usersArray = JSON.parse(usersJSON);
+        console.log(id)
+        console.log(usersArray)
         let alteredUsers = usersArray.filter(function(e){
             return e.id !== id
-
         })
-        AsyncStorage.setItem('@MajorRating', JSON.stringify(alteredUsers));
+        await AsyncStorage.setItem('@MajorRating', JSON.stringify(alteredUsers));
         setMajorRating(alteredUsers.filter(x=> x.embeddedMajor == major))
+        setAllMajorRating(alteredUsers)
+        console.log(alteredUsers)
     }
     catch(error){
         console.log(error)
@@ -103,8 +106,10 @@ const SubjectTrack = ({ navigation, route }) => {
            <Text>Topic: {item.lectureNumber}</Text>
            <Text>Rating: {item.rating} </Text>
            <Text>Feedback: {item.feedback} </Text>
+           <Text>Id: {item.id} </Text>
            <Button title='Delete' onPress={()=>{
               remove_user(item.id)
+              console.log(item.id)
             }}/>
       </View>
     )
@@ -206,11 +211,11 @@ const SubjectTrack = ({ navigation, route }) => {
                title={"Record"}
                color="blue"
                onPress = {() => {
-                
+                  let id = uuidv4()
                  const newAllMajorRating =
                   allMajorRating.concat(
                      {'lectureNumber':lectureNumber,
-                      'id': uuidv4(),
+                      'id': id,
                       'course':course,
                       'rating':rating,
                       'feedback':feedback,
@@ -221,7 +226,7 @@ const SubjectTrack = ({ navigation, route }) => {
                    const newMajorRating =
                     majorRating.concat(
                        {'lectureNumber':lectureNumber,
-                        'id': uuidv4(),
+                        'id': id,
                         'course':course,
                         'rating':rating,
                         'feedback':feedback,
