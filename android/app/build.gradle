@@ -132,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.hellotim"
+        applicationId "com.giantsteps"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
