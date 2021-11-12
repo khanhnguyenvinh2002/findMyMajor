@@ -4,6 +4,7 @@ import { View, Button,
          Text, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StarRating from 'react-native-star-rating-widget';
+import {useValue} from './ValueContext';
 function uuidv4() { // Public Domain/MIT
   var d = new Date().getTime();//Timestamp
   var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
@@ -22,6 +23,7 @@ function uuidv4() { // Public Domain/MIT
 
 
 const SubjectTrack = ({ navigation, route }) => {
+  const {allMajorRating,setAllMajorRating, getData, storeData, remove_user, clearAll} = useValue();
   const [course,setCourse] = useState("")
   const [lectureNumber,setLectureNumber] = useState("")
   const [id,setId] = useState("")
@@ -29,82 +31,87 @@ const SubjectTrack = ({ navigation, route }) => {
   const [rating,setRating] = useState("")
   const [feedback,setFeedback] = useState("")
   const [majorRating,setMajorRating]= useState([])
-  const [allMajorRating,setAllMajorRating]= useState([])
+  // const [allMajorRating,setAllMajorRating]= useState([])
   const [major, setMajor] = useState(route.params.subject)
 
   // this loads in the data after the app has been rendered
-  useEffect(() => {getData()}
+  useEffect(() => {
+    console.log("in")
+    getData();
+
+    setMajorRating(allMajorRating.filter(x => x.embeddedMajor == major))
+  }
            ,[])
 
-  const getData = async () => {
-        try {
-          // the '@profile_info' can be any string
-          const jsonValue = await AsyncStorage.getItem('@MajorRating')
-          let data = null
-          if (jsonValue!=null) {
-            data = JSON.parse(jsonValue)
-            setAllMajorRating(data)
-            setMajorRating(data.filter(x => x.embeddedMajor == major))
-            console.log('just set Info, Name and Email')
-          } else {
-            console.log('just read a null value from Storage')
-            // this happens the first time the app is loaded
-            // as there is nothing in storage...
-            setMajorRating([])
-            setLectureNumber("")
-            setCourse("")
-            setRating("")
-            setFeedback("")
-          }
-        } catch(e) {
-          console.log("error in getData ")
-          // this shouldn't happen, but its good practice
-          // to check for errors!
-          console.dir(e)
-          // error reading value
-        }
-  }
+//   const getData = async () => {
+//         try {
+//           // the '@profile_info' can be any string
+//           const jsonValue = await AsyncStorage.getItem('@MajorRating')
+//           let data = null
+//           if (jsonValue!=null) {
+//             data = JSON.parse(jsonValue)
+//             setAllMajorRating(data)
+//             setMajorRating(data.filter(x => x.embeddedMajor == major))
+//             console.log('just set Info, Name and Email')
+//           } else {
+//             console.log('just read a null value from Storage')
+//             // this happens the first time the app is loaded
+//             // as there is nothing in storage...
+//             setMajorRating([])
+//             setLectureNumber("")
+//             setCourse("")
+//             setRating("")
+//             setFeedback("")
+//           }
+//         } catch(e) {
+//           console.log("error in getData ")
+//           // this shouldn't happen, but its good practice
+//           // to check for errors!
+//           console.dir(e)
+//           // error reading value
+//         }
+//   }
 
-  const storeData = async (value) => {
-        try {
-          const jsonValue = JSON.stringify(value)
-          await AsyncStorage.setItem('@MajorRating', jsonValue)
-          console.log('just stored '+jsonValue)
-        } catch (e) {
-          console.log("error in storeData ")
-          console.dir(e)
-          // saving error
-        }
-  }
-  const remove_user = async(id) => {
-    try{
-        let usersJSON= await AsyncStorage.getItem('@MajorRating');
-        let usersArray = JSON.parse(usersJSON);
-        console.log(id)
-        console.log(usersArray)
-        let alteredUsers = usersArray.filter(function(e){
-            return e.id !== id
-        })
-        await AsyncStorage.setItem('@MajorRating', JSON.stringify(alteredUsers));
-        setMajorRating(alteredUsers.filter(x=> x.embeddedMajor == major))
-        setAllMajorRating(alteredUsers)
-        console.log(alteredUsers)
-    }
-    catch(error){
-        console.log(error)
-    }
-};
+//   const storeData = async (value) => {
+//         try {
+//           const jsonValue = JSON.stringify(value)
+//           await AsyncStorage.setItem('@MajorRating', jsonValue)
+//           console.log('just stored '+jsonValue)
+//         } catch (e) {
+//           console.log("error in storeData ")
+//           console.dir(e)
+//           // saving error
+//         }
+//   }
+//   const remove_user = async(id) => {
+//     try{
+//         let usersJSON= await AsyncStorage.getItem('@MajorRating');
+//         let usersArray = JSON.parse(usersJSON);
+//         console.log(id)
+//         console.log(usersArray)
+//         let alteredUsers = usersArray.filter(function(e){
+//             return e.id !== id
+//         })
+//         await AsyncStorage.setItem('@MajorRating', JSON.stringify(alteredUsers));
+//         setMajorRating(alteredUsers.filter(x=> x.embeddedMajor == major))
+//         setAllMajorRating(alteredUsers)
+//         console.log(alteredUsers)
+//     }
+//     catch(error){
+//         console.log(error)
+//     }
+// };
 
-  const clearAll = async () => {
-        try {
-          console.log('in clearData')
-          await AsyncStorage.clear()
-        } catch(e) {
-          console.log("error in clearData ")
-          console.dir(e)
-          // clear error
-        }
-  }
+//   const clearAll = async () => {
+//         try {
+//           console.log('in clearData')
+//           await AsyncStorage.clear()
+//         } catch(e) {
+//           console.log("error in clearData ")
+//           console.dir(e)
+//           // clear error
+//         }
+//   }
 
 
 // Each Pomorodo in the FlatList will be rendered as follows:
@@ -119,6 +126,9 @@ const SubjectTrack = ({ navigation, route }) => {
            <Text>Id: {item.id} </Text>
            <Button title='Delete' onPress={()=>{
               remove_user(item.id)
+              setMajorRating(majorRating.filter(function(e){
+                return e.id !== item.id
+            }))
               console.log(item.id)
             }}/>
       </View>
@@ -246,7 +256,6 @@ const SubjectTrack = ({ navigation, route }) => {
                      })
                  setMajorRating(newMajorRating)
                  setAllMajorRating(newAllMajorRating)
-                 storeData(newAllMajorRating)
 
                  setLectureNumber("")
                  setCourse("")

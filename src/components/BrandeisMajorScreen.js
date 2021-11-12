@@ -2,6 +2,7 @@ import React , { useState, useEffect }from 'react';
 import { SafeAreaView, ScrollView, View, FlatList, StyleSheet, Text, Button,StatusBar, Image } from 'react-native';
 import BrandeisMajor from '../assets/BrandeisMajor'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useValue} from './ValueContext';
 
 const brandeisMajor = BrandeisMajor()
 
@@ -11,26 +12,16 @@ const DATA = brandeisMajor.map((x) => {
 })
 
 
-const Item = ({ title,navigation}) => {
+const Item = ({ title,navigation,children}) => {
   const [rating,setRating] = useState(0)
   useEffect(() => {getData()}
-           ,[rating])
+           ,[])
 
   const getData = async () => {
         try {
-          // the '@profile_info' can be any string
-          const jsonValue = await AsyncStorage.getItem('@MajorRating')
-          let data = null
-          if (jsonValue!=null) {
-            data = JSON.parse(jsonValue)
-            console.log(data)
-            data = data.filter(x=> x.embeddedMajor == title)
-            let count = data.length;
-            data = count == 0 ? 0: data.map(x=> parseInt(x.rating, 10)).reduce((a, b) => a + b, 0)/count;
+            let count = children.length;
+            let data = count == 0 ? 0: children.map(x=> parseInt(x.rating, 10)).reduce((a, b) => a + b, 0)/count;
             setRating(data)
-          } else {
-            console.log('just read a null value from Storage')
-          }
         } catch(e) {
           console.log("error in getData ")
           // this shouldn't happen, but its good practice
@@ -42,7 +33,7 @@ const Item = ({ title,navigation}) => {
   return (
       <View style={styles.item}>
 
-        <Button title={title}
+        <Button title={title} 
           onPress={() =>
             navigation.navigate('SubjectTrack', { subject: title})
                // we're passing a parameter name:'Jane' to the Profile component!
@@ -54,11 +45,24 @@ const Item = ({ title,navigation}) => {
   );
 };
 const BrandeisMajorScreen = ({navigation}) => {
+
+  const {allMajorRating} = useValue();
+  // useEffect(()=>{ 
+  //   const unsubscribe = navigation.addListener('focus', () => {
+      
+  //   });
+
+  //   return () => {
+  //     unsubscribe;
+  //   };
+  // }, [allMajorRating])
   const renderItem = ({ item }) => (
     <View >
 
-      <Item navigation={navigation}
-          title={item.title}/>
+      <Item navigation={navigation} 
+          title={item.title}>
+           { allMajorRating.filter(x=> x.embeddedMajor == item.title)}
+          </Item>
     </View>
   );
 
