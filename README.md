@@ -1,3 +1,15 @@
+## Developer notes!
+
+Download necessary packages with npm install or expo.
+
+To run this project, use command expo start.
+
+To run on ios, use command react-native run-ios.
+
+To run on android, use command react-native run-android.
+
+To start, use command react-native start.
+
 # FindMyMajor!
 
 Don't know what to major? Let's findmymajor.
