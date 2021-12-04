@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import BBViewer from './src/components/BBViewer'
+import HomePage from './src/components/HomePage'
 import ValueProvider from './src/components/ValueContext';
 export default function App() {
   return (
     <ValueProvider>
-       <BBViewer/>
+       <HomePage/>
        </ValueProvider>
   );
 }

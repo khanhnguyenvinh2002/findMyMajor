@@ -40,22 +40,13 @@ const Item = ({ title,navigation,children}) => {
           }>
 
         </Button>
-        <Text>{rating}</Text>
+        <Text>Average rating: {rating}</Text>
       </View>
   );
 };
 const BrandeisMajorScreen = ({navigation}) => {
 
   const {allMajorRating} = useValue();
-  // useEffect(()=>{ 
-  //   const unsubscribe = navigation.addListener('focus', () => {
-      
-  //   });
-
-  //   return () => {
-  //     unsubscribe;
-  //   };
-  // }, [allMajorRating])
   const renderItem = ({ item }) => (
     <View >
 
@@ -68,8 +59,7 @@ const BrandeisMajorScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{fontSize:32,
-                    backgroundColor:'red'}}>
+      <Text style={{fontSize:32}}>
          Choose your major
       </Text>
       <FlatList

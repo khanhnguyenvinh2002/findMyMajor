@@ -1,41 +1,130 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View, Button, Image, TextInput} from 'react-native';
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Constants from 'expo-constants';
 import SubjectTrack from './SubjectTrack'
 import MajorBrandeis from './MajorBrandeis'
 import BrandeisMajorScreen from './BrandeisMajorScreen'
-
-
+import Colors from '../constants/colors'
+const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const HomePage = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Tab.Navigator>
 
-        <Stack.Screen
+        <Tab.Screen
           name="Home"
           component={HomeScreen}
-          //options={{ title: 'Welcome' }}
+          options={{
+            tabBarLabel: ({ focused, color, size }) => (
+              <Text style={{color:focused?Colors.tintColor:"#A9A9A9", fontSize: 11}}> Home </Text>
+            ),
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialCommunityIcons name="home" color={focused ? Colors.tintColor : "#A9A9A9"} size={size} />
+            ),
+          }}
         />
+        {/* <Tab.Screen name="About" component={AboutScreen} /> */}
 
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="About" component={AboutScreen} />
+        <Tab.Screen 
+          name="MajorNavigation" 
+          component={MajorNavigation} 
+          options={{
+            headerShown: false,
+            tabBarLabel: ({ focused, color, size }) => (
+              <Text style={{color:focused?Colors.tintColor:"#A9A9A9", fontSize: 11}}> Brandeis Major </Text>
+            ),
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialCommunityIcons name="star" color={focused ? Colors.tintColor : "#A9A9A9"} size={size} />
+            ),
+          }}/>
+{/* 
+        <Tab.Screen name="Subject" component={SubjectScreen} />
+        <Tab.Screen name="SubjectTrack" component={SubjectTrack} /> */}
 
-        <Stack.Screen name="BrandeisMajorScreen" component={BrandeisMajorScreen} />
-
-        <Stack.Screen name="Subject" component={SubjectScreen} />
-        <Stack.Screen name="SubjectTrack" component={SubjectTrack} />
-
-      </Stack.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
+    // <NavigationContainer>
+    //   <Stack.Navigator>
+
+    //     <Stack.Screen
+    //       name="Home"
+    //       component={HomeScreen}
+    //       //options={{ title: 'Welcome' }}
+    //     />
+
+    //     <Stack.Screen name="Profile" component={ProfileScreen} />
+    //     <Stack.Screen name="About" component={AboutScreen} />
+
+    //     <Stack.Screen name="BrandeisMajorScreen" component={BrandeisMajorScreen} />
+
+    //     <Stack.Screen name="Subject" component={SubjectScreen} />
+    //     <Stack.Screen name="SubjectTrack" component={SubjectTrack} />
+
+    //   </Stack.Navigator>
+    // </NavigationContainer>
   );
 };
 
+const MajorNavigation = ()=> {
+  return (
+    <Stack.Navigator>
+      
+      <Stack.Screen name="BrandeisMajorScreen" 
+      component={BrandeisMajorScreen} 
+      options={{
+        title: 'Brandeis Majors',
+        headerStyle: {
+          backgroundColor: Colors.tintColor,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23
+        },
+      }} />
+      <Stack.Screen name="Subject" component={SubjectScreen}
+      options={{
+        title: 'Subject',
+        headerStyle: {
+          backgroundColor: Colors.tintColor,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23
+        },
+      }}
+      /> 
+       <Stack.Screen name="SubjectTrack" component={SubjectTrack}
+      options={{
+        title: 'Subject Track',
+        headerStyle: {
+          backgroundColor: Colors.tintColor,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontSize: 23
+        },
+      }}
+      /> 
+    </Stack.Navigator>
+
+
+)
+}
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -69,12 +158,6 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-// ProfileScreen function is called with a JSON object
-//  {navigation:..., route:...,  otherstuff}
-const ProfileScreen = ({ navigation, route }) => {
-  return <Text>{route.params.greeting}, this is {route.params.name}'s profile</Text>;
-       // we're using the parameter name passed in from the HomeScreen
-};
 
 const SubjectScreen = ({ navigation, route }) => {
   return <>
